@@ -3,25 +3,8 @@
 **Um CLI para corrigir e extrair arquivos ZIP com nomes Unicode no Windows.**
 
 [![CI](https://github.com/SouzaF19/zipfix/actions/workflows/ci.yml/badge.svg)](https://github.com/SouzaF19/zipfix/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/badge/release-v0.1.0-blue)](https://github.com/SouzaF19/zipfix/releases/tag/v0.1.0)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow)](https://github.com/SouzaF19/zipfix/blob/main/LICENSE)
-
----
-
-## 📑 Sumário
-
-- [Sobre o problema](#-sobre-o-problema)
-- [A solução](#-a-solução)
-- [Funcionalidades](#-funcionalidades)
-- [Instalação](#-instalação)
-- [Uso](#-uso)
-- [Como funciona](#-como-funciona)
-- [Desenvolvimento](#-desenvolvimento)
-- [Testes](#-testes)
-- [CI](#-ci)
-- [Release](#-release)
-- [Contribuindo](#-contribuindo)
-- [Licença](#-licença)
+[![Release](https://img.shields.io/github/v/tag/SouzaF19/zipfix)](https://github.com/SouzaF19/zipfix/releases)
+[![License](https://img.shields.io/badge/license-MIT-brightgreen)](https://github.com/SouzaF19/zipfix/blob/main/LICENSE)
 
 ---
 
@@ -38,7 +21,8 @@ em perda de caracteres.
 
 ### Por que isso importa
 
-- Extrair um ZIP com `Compress-Archive` / `Expand-Archive` no PowerShell pode gerar nomes quebrados;
+- Extrair um ZIP com `Compress-Archive` / `Expand-Archive` no PowerShell pode gerar nomes
+  quebrados;
 - Prefixos e nomes com `ä`, `ç`, `ã`, `€`, emojis e combinações passam a ser ininteligíveis;
 - Leitores em outras plataformas (Linux, Web, Android) reagem mal a nomes malformados.
 
@@ -49,7 +33,7 @@ em perda de caracteres.
 O **ZipFix** é um pequeno CLI que:
 
 1. Lê um arquivo `.zip`;
-2. Valida e sanitiza cada entrada (remove caracteres proibidos no Windows e limita o tamanho);
+2. Valida e sanitiza cada entrada (remove caracteres proibidos e limita o tamanho);
 3. Reescreve o ZIP com nomes seguros e com encoding correto (UTF-8);
 4. Extrai os arquivos de forma determinística.
 
@@ -132,52 +116,50 @@ C:/zipflix
 ## 🔭 Próximos passos
 
 - Testes com ZIPs reais, incluindo nomes com emoji;
-- Suporte a criptografia (AES);
-- Publicação no PyPI.
+- Suporte a criptografia (AES).
 
 ---
 
-## 🧪 Desenvolvimento
+## 📄 Licença
+
+MIT
+
+---
+
+## 📦 WinPathFix
+
+**Um CLI para renomear arquivos soltos com caracteres invalidos no Windows.**
+
+- Detecta e renomeia arquivos com caracteres proibidos (`|`, `<`, `>`, `:`, `"`, `?`, `*`, `\`).
+- Preserva Unicode e estrutura de pastas.
+- Limita tamanho de nome a 255 caracteres por segmento.
 
 ```bash
-make install
-make test
-make run INPUT=./entrada.zip OUT=./saida.zip
-make build
-make clean
+winpathfix fix ./pastainvalida/
 ```
 
 ---
 
-## 🧪 Testes
+## 📦 PyPI
 
 ```bash
-python -m unittest discover -s tests -v
+pip install zipfix
 ```
 
----
+ou
 
-## ⚙️ CI
-
-GitHub Actions roda os testes em todo push/PR para `main`.
-
----
-
-## 🚀 Release
-
-Tags seguem o formato `vX.Y.Z` (ex.: `v0.1.0`).
-
----
-
-## 🤝 Contribuindo
-
-1. Fork;
-2. Branch;
-3. Testes;
-4. PR.
+```bash
+pip install git+https://github.com/SouzaF19/zipfix.git
+```
 
 ---
 
 ## 📄 Licença
 
 MIT — ver [LICENSE](LICENSE).
+
+---
+
+## 📬 Contato
+
+- GitHub: [@SouzaF19](https://github.com/SouzaF19)
