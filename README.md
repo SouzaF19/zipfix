@@ -2,6 +2,27 @@
 
 **Um CLI para corrigir e extrair arquivos ZIP com nomes Unicode no Windows.**
 
+[![CI](https://github.com/SouzaF19/zipfix/actions/workflows/ci.yml/badge.svg)](https://github.com/SouzaF19/zipfix/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/badge/release-v0.1.0-blue)](https://github.com/SouzaF19/zipfix/releases/tag/v0.1.0)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow)](https://github.com/SouzaF19/zipfix/blob/main/LICENSE)
+
+---
+
+## 📑 Sumário
+
+- [Sobre o problema](#-sobre-o-problema)
+- [A solução](#-a-solução)
+- [Funcionalidades](#-funcionalidades)
+- [Instalação](#-instalação)
+- [Uso](#-uso)
+- [Como funciona](#-como-funciona)
+- [Desenvolvimento](#-desenvolvimento)
+- [Testes](#-testes)
+- [CI](#-ci)
+- [Release](#-release)
+- [Contribuindo](#-contribuindo)
+- [Licença](#-licença)
+
 ---
 
 ## 🎯 Sobre o problema
@@ -17,8 +38,7 @@ em perda de caracteres.
 
 ### Por que isso importa
 
-- Extrair um ZIP com `Compress-Archive` / `Expand-Archive` no PowerShell pode gerar nomes
-  quebrados;
+- Extrair um ZIP com `Compress-Archive` / `Expand-Archive` no PowerShell pode gerar nomes quebrados;
 - Prefixos e nomes com `ä`, `ç`, `ã`, `€`, emojis e combinações passam a ser ininteligíveis;
 - Leitores em outras plataformas (Linux, Web, Android) reagem mal a nomes malformados.
 
@@ -98,6 +118,11 @@ C:/zipflix
 │   └── __main__.py
 ├── tests/
 │   └── test_fixer.py
+├── .github/
+│   └── workflows/
+│       └── ci.yml
+├── Makefile
+├── pyproject.toml
 ├── README.md
 └── LICENSE
 ```
@@ -107,7 +132,49 @@ C:/zipflix
 ## 🔭 Próximos passos
 
 - Testes com ZIPs reais, incluindo nomes com emoji;
-- Suporte a criptografia (AES).
+- Suporte a criptografia (AES);
+- Publicação no PyPI.
+
+---
+
+## 🧪 Desenvolvimento
+
+```bash
+make install
+make test
+make run INPUT=./entrada.zip OUT=./saida.zip
+make build
+make clean
+```
+
+---
+
+## 🧪 Testes
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+---
+
+## ⚙️ CI
+
+GitHub Actions roda os testes em todo push/PR para `main`.
+
+---
+
+## 🚀 Release
+
+Tags seguem o formato `vX.Y.Z` (ex.: `v0.1.0`).
+
+---
+
+## 🤝 Contribuindo
+
+1. Fork;
+2. Branch;
+3. Testes;
+4. PR.
 
 ---
 
