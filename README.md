@@ -126,20 +126,6 @@ MIT
 
 ---
 
-## 📦 WinPathFix
-
-**Um CLI para renomear arquivos soltos com caracteres invalidos no Windows.**
-
-- Detecta e renomeia arquivos com caracteres proibidos (`|`, `<`, `>`, `:`, `"`, `?`, `*`, `\`).
-- Preserva Unicode e estrutura de pastas.
-- Limita tamanho de nome a 255 caracteres por segmento.
-
-```bash
-winpathfix fix ./pastainvalida/
-```
-
----
-
 ## 📦 PyPI
 
 ```bash
@@ -156,7 +142,7 @@ pip install git+https://github.com/SouzaF19/zipfix.git
 
 ## 📄 Licença
 
-MIT — ver [LICENSE](LICENSE).
+MIT
 
 ---
 
