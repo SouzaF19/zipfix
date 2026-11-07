@@ -2,6 +2,7 @@
 
 import argparse
 import sys
+import zipfile
 
 from zipflix import __version__
 from zipflix import fixer
@@ -35,20 +36,24 @@ def main(argv=None) -> int:
     parser = _build_parser()
     args = parser.parse_args(argv)
 
-    if args.command == "fix":
-        results = fixer.fix_zip(args.input, args.out)
-        print(f"OK: {len(results)} entries reescritas -> {args.out}")
-        for orig, new in results:
-            print(f"  {orig}  ==>  {new}")
-        return 0
+    try:
+        if args.command == "fix":
+            results = fixer.fix_zip(args.input, args.out)
+            print(f"OK: {len(results)} entries reescritas -> {args.out}")
+            for orig, new in results:
+                print(f"  {orig}  ==>  {new}")
+            return 0
 
-    if args.command == "extract":
-        count = fixer.extract_zip(args.input, args.dest)
-        print(f"OK: {count} entries extraidos para {args.dest}")
-        return 0
+        if args.command == "extract":
+            count = fixer.extract_zip(args.input, args.dest)
+            print(f"OK: {count} entries extraidos para {args.dest}")
+            return 0
+    except (OSError, ValueError, zipfile.BadZipFile) as exc:
+        print(f"zipflix: erro: {exc}", file=sys.stderr)
+        return 1
 
     return 2
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    raise SystemExit(main())

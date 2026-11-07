@@ -10,15 +10,25 @@ MAX_NAME_LENGTH = 255
 
 
 def sanitize_name(name: str) -> str:
-    r"""Remove caracteres proibidos no Windows e limita o tamanho do nome.
+    r"""Remove caracteres proibidos no Windows, descarta segmentos perigosos e limita tamanhos.
 
-    Mantém a barra (`/`) que separa diretórios, normaliza `\` -> `/`.
+    - Normaliza `\` -> `/`.
+    - Remove caracteres inválidos (<>:"/\|?* e controle) e descarta segmentos vazios/`.`/`..`.
+    - Limita cada componente a `MAX_NAME_LENGTH`.
     """
     cleaned = name.replace("\\", "/")
-    cleaned = INVALID_CHARS.sub("", cleaned).strip()
-    cleaned = cleaned.strip(".")
-    if len(cleaned) > MAX_NAME_LENGTH:
-        cleaned = cleaned[:MAX_NAME_LENGTH].rstrip()
+    trailing = cleaned.endswith("/")
+    parts = []
+    for part in cleaned.split("/"):
+        p = INVALID_CHARS.sub("", part).strip()
+        if p and p not in (".", ".."):
+            parts.append(p)
+    cleaned = "/".join(parts)
+    cleaned = cleaned.rstrip(".")
+    segments = cleaned.split("/") if cleaned else []
+    cleaned = "/".join(seg[:MAX_NAME_LENGTH].rstrip() for seg in segments)
+    if trailing and cleaned and not cleaned.endswith("/"):
+        cleaned = cleaned + "/"
     return cleaned
 
 
@@ -28,7 +38,6 @@ def read_entries(path: str) -> list:
 
 
 def _clean_entries(path: str) -> list:
-    """Lê os entries, sanitiza os nomes e descarta duplicados/vazios."""
     cleaned = []
     seen = set()
     with zipfile.ZipFile(path, "r") as zf:
@@ -43,6 +52,8 @@ def _clean_entries(path: str) -> list:
 
 def fix_zip(src: str, dst: str) -> list:
     """Reescreve o ZIP de entrada com nomes sanitizados (UTF-8) em um novo ZIP."""
+    if os.path.abspath(src) == os.path.abspath(dst):
+        raise ValueError("src and dst must differ")
     results = []
     with zipfile.ZipFile(src, "r") as zin, \
          zipfile.ZipFile(dst, "w", zipfile.ZIP_DEFLATED) as zout:
@@ -62,7 +73,7 @@ def extract_zip(src: str, dest: str) -> int:
     count = 0
     with zipfile.ZipFile(src, "r") as zf:
         for name, info in _clean_entries(src):
-            target = os.path.join(dest, name)
+            target = os.path.join(dest, *name.split("/"))
             if info.filename.endswith("/"):
                 os.makedirs(target, exist_ok=True)
                 continue

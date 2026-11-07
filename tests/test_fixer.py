@@ -1,7 +1,6 @@
 """Testes do ZipFix: sanitização e reescrita/extração de nomes em ZIP."""
 
 import os
-import shutil
 import tempfile
 import unittest
 import zipfile
@@ -33,6 +32,15 @@ class TestFixer(unittest.TestCase):
         self.assertEqual(fixer.sanitize_name("invalid|name*.txt"), "invalidname.txt")
         self.assertEqual(fixer.sanitize_name("bad:char*|name?.txt"), "badcharname.txt")
 
+    def test_sanitize_blocks_parent_traversal(self):
+        self.assertEqual(fixer.sanitize_name("../../evil.txt"), "evil.txt")
+        self.assertEqual(fixer.sanitize_name("../evil.txt"), "evil.txt")
+        self.assertNotIn("..", fixer.sanitize_name("../../evil.txt"))
+
+    def test_sanitize_truncates_per_segment(self):
+        long_name = "a" * 300
+        self.assertEqual(len(fixer.sanitize_name(long_name)) <= 255, True)
+
     def test_fix_zip_rewrites_names(self):
         src = os.path.join(self.tmpdir, "entrada.zip")
         dst = os.path.join(self.tmpdir, "saida.zip")
@@ -46,6 +54,12 @@ class TestFixer(unittest.TestCase):
         self.assertIn("emoji-🚀-teste.txt", names)
         self.assertIn("invalidname.txt", names)
         self.assertNotIn("invalid|name*.txt", names)
+
+    def test_fix_zip_same_path_raises(self):
+        src = os.path.join(self.tmpdir, "entrada.zip")
+        self._make_zip(src)
+        with self.assertRaises(ValueError):
+            fixer.fix_zip(src, src)
 
     def test_extract_zip_sanitizes(self):
         src = os.path.join(self.tmpdir, "entrada2.zip")
