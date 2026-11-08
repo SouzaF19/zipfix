@@ -129,7 +129,7 @@ MIT
 ## 📦 PyPI
 
 ```bash
-pip install zipfix
+pip install zipfixx
 ```
 
 ou
